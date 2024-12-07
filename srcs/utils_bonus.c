@@ -6,25 +6,64 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:33:10 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/07 01:39:29 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/07 14:42:43 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	ft_execute(int std_out, char *argv, char **envp)
+void    ft_set_in(char *argv, int *fd)
 {
-	char	*path;
-	char	**cmds;
+    int in;
 
-	cmds = ft_split(argv, ' ');
-	if (!cmds)
-		ft_error(BAD_ALLOCATION, std_out);
-	path = ft_getpath(cmds[0], envp);
-	if (!path || execve(path, cmds, envp) == -1)
-	{
-		free(path);
-		ft_clr(cmds);
-		ft_error(BAD_UNDEFINED, std_out);
-	}
+    in = open(argv, O_RDONLY);
+    if (in == -1)
+        ft_error(BAD_FD, STDOUT_FILENO);
+    ft_dup2(in, STDIN_FILENO, fd);
+}
+
+void    ft_set_out(char *argv, int *fd)
+{
+    int out;
+
+    out = open(argv, O_WRONLY | O_CREAT | O_TRUNC, 0777);
+    if (out == -1)
+    {
+        ft_close_pipe(fd);
+        ft_error(BAD_FD, STDOUT_FILENO);
+    }
+    ft_dup2(out, STDOUT_FILENO, fd);
+}
+
+void    ft_close_pipe(int *fd)
+{
+    if (fd[0] >= 0)
+        close(fd[0]);
+    if (fd[1] >= 0)
+        close(fd[1]);
+}
+
+void    ft_dup2(int s, int d, int *fd)
+{
+    if (dup2(s, d) == -1)
+    {
+        close(s);
+        ft_close_pipe(fd);
+        ft_error(BAD_UNDEFINED, STDOUT_FILENO);
+    }
+    close(s);
+    ft_close_pipe(fd);
+}
+
+pid_t    ft_fork(int *fd)
+{
+    pid_t   pid;
+
+    pid = fork();
+    if (pid == -1)
+    {
+        ft_close_pipe(fd);
+        ft_error(BAD_UNDEFINED, STDOUT_FILENO);
+    }
+    return (pid);
 }

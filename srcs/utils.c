@@ -6,7 +6,6 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 13:43:03 by tkeil             #+#    #+#             */
-<<<<<<< HEAD
 /*   Updated: 2024/12/07 19:55:49 by tkeil            ###   ########.fr       */
 =======
 /*   Updated: 2024/12/06 22:45:17 by tkeil            ###   ########.fr       */
@@ -22,20 +21,20 @@ void	ft_error(int errno, int fd)
 	exit(errno);
 }
 
-void	ft_clr(char **ptr)
+void	ft_clr(char ***ptr)
 {
 	int	i;
 
-	if (!ptr || !*ptr)
+	if (!ptr || !*ptr || !**ptr)
 		return ;
 	i = 0;
-	while (ptr[i])
-		free(ptr[i++]);
-	free(ptr);
-	ptr = NULL;
+	while ((*ptr)[i])
+		free((*ptr)[i++]);
+	free(*ptr);
+	*ptr = NULL;
 }
 
-static char	*ft_check_paths(char *env, char *cmd)
+char	*ft_getpath(char *cmd, char **envp)
 {
 	int		i;
 	char	*path;
@@ -50,28 +49,10 @@ static char	*ft_check_paths(char *env, char *cmd)
         full = ft_strjoin(path, cmd);
         free(path);
         if (!full)
-            return (ft_clr(&env), NULL);
-        if (access(full, X_OK) == 0)
-			return (ft_clr(&env), full);
+            return (ft_clr(start), NULL);
+		if (access(full, F_OK) == 0)
+			return (ft_clr(start), full);
 		free(full);
-		i++;
-    }
-    return (ft_clr(&env), NULL);
-}
-
-char    *ft_getpath(char *cmd, char **envp)
-{
-    char    **env;
-
-    if (!envp || !*envp)
-        return (NULL);
-    while (*envp)
-    {
-        if (ft_strnstr(envp++, "PATH=", 5))
-            break ;
-    }
-    env = ft_split(envp + 5, ' ');
-    if (!env || !*env)
-        return (NULL);
-	return (ft_check_paths(env, cmd));
+	}
+	return (ft_clr(start), NULL);
 }
