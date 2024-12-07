@@ -6,15 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:33:10 by tkeil             #+#    #+#             */
-<<<<<<< HEAD
-<<<<<<< HEAD
-/*   Updated: 2024/12/07 14:56:54 by tkeil            ###   ########.fr       */
-=======
-/*   Updated: 2024/12/07 14:42:43 by tkeil            ###   ########.fr       */
->>>>>>> f7bbedc (mend)
-=======
-/*   Updated: 2024/12/07 14:56:54 by tkeil            ###   ########.fr       */
->>>>>>> 2938c21 (mend)
+/*   Updated: 2024/12/07 21:50:45 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,13 +52,7 @@ void    ft_dup2(int s, int d, int *fd)
         ft_error(BAD_UNDEFINED, STDOUT_FILENO);
     }
     close(s);
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
     ft_close_pipe(fd);
->>>>>>> f7bbedc (mend)
-=======
->>>>>>> 2938c21 (mend)
 }
 
 pid_t    ft_fork(int *fd)
