@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:33:01 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/07 14:45:59 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/07 14:48:01 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,6 @@ int	main(int argc, char **argv, char **envp)
         ft_create_pipe(fd, &read, argv[i], envp);
     ft_set_out(argv[argc - 1], fd);
     ft_dup2(read, STDIN_FILENO, fd);
-    close(read);
-    ft_close_pipe(fd);
     ft_execute(STDOUT_FILENO, argv[argc - 2], envp);
 	return (0);
 }
