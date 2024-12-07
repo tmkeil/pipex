@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 13:43:03 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/07 21:53:07 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/06 22:45:17 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,17 @@ void	ft_error(int errno, int fd)
 	exit(errno);
 }
 
-void	ft_clr(char ***ptr)
+void	ft_clr(char **ptr)
 {
 	int	i;
 
-	if (!ptr || !*ptr || !**ptr)
+	if (!ptr || !*ptr)
 		return ;
 	i = 0;
-	while ((*ptr)[i])
-		free((*ptr)[i++]);
-	free(*ptr);
-	*ptr = NULL;
+	while (ptr[i])
+		free(ptr[i++]);
+	free(ptr);
+	ptr = NULL;
 }
 
 static char	*ft_check_paths(char *env, char *cmd)
