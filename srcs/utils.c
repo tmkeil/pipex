@@ -7,10 +7,20 @@
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 13:43:03 by tkeil             #+#    #+#             */
 <<<<<<< HEAD
+<<<<<<< HEAD
 /*   Updated: 2024/12/07 20:45:16 by tkeil            ###   ########.fr       */
 =======
 /*   Updated: 2024/12/07 21:01:09 by tkeil            ###   ########.fr       */
 >>>>>>> f3350e0 (mend)
+=======
+/*   Updated: 2024/12/07 21:01:09 by tkeil            ###   ########.fr       */
+=======
+/*   Updated: 2024/12/07 19:55:49 by tkeil            ###   ########.fr       */
+=======
+/*   Updated: 2024/12/06 22:45:17 by tkeil            ###   ########.fr       */
+>>>>>>> 2b565b7 (almost all)
+>>>>>>> 48ac8b8 (bonus try and relocated functions)
+>>>>>>> f7bbedc (mend)
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +45,7 @@ void	ft_clr(char ***ptr)
 	*ptr = NULL;
 }
 
-static char	*ft_check_paths(char *env, char *cmd)
+char	*ft_getpath(char *cmd, char **envp)
 {
 	int		i;
 	char	*path;
@@ -50,28 +60,10 @@ static char	*ft_check_paths(char *env, char *cmd)
         full = ft_strjoin(path, cmd);
         free(path);
         if (!full)
-            return (ft_clr(&env), NULL);
-        if (access(full, X_OK) == 0)
-			return (ft_clr(&env), full);
+            return (ft_clr(start), NULL);
+		if (access(full, F_OK) == 0)
+			return (ft_clr(start), full);
 		free(full);
-		i++;
-    }
-    return (ft_clr(&env), NULL);
-}
-
-char    *ft_getpath(char *cmd, char **envp)
-{
-    char    **env;
-
-    if (!envp || !*envp)
-        return (NULL);
-    while (*envp)
-    {
-        if (ft_strnstr(envp++, "PATH=", 5))
-            break ;
-    }
-    env = ft_split(envp + 5, ' ');
-    if (!env || !*env)
-        return (NULL);
-	return (ft_check_paths(env, cmd));
+	}
+	return (ft_clr(start), NULL);
 }

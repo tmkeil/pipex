@@ -6,7 +6,11 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:33:10 by tkeil             #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2024/12/07 14:56:54 by tkeil            ###   ########.fr       */
+=======
+/*   Updated: 2024/12/07 14:42:43 by tkeil            ###   ########.fr       */
+>>>>>>> f7bbedc (mend)
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +56,10 @@ void    ft_dup2(int s, int d, int *fd)
         ft_error(BAD_UNDEFINED, STDOUT_FILENO);
     }
     close(s);
+<<<<<<< HEAD
+=======
+    ft_close_pipe(fd);
+>>>>>>> f7bbedc (mend)
 }
 
 pid_t    ft_fork(int *fd)
