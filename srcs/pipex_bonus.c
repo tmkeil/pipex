@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:33:01 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/07 21:50:40 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/07 15:12:01 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,8 @@ static void    ft_create_pipe(int *fd, int *read, char *argv, char **envp)
         if (*read != -1)
             ft_dup2(*read, STDIN_FILENO, fd);
         ft_dup2(fd[1], STDOUT_FILENO, fd);
-        ft_execute(STDOUT_FILENO, argv, envp);
-    }
-    if (*read != -1)
-        close(*read);
-    *read = fd[0];
-    ft_close_pipe(fd);
-    if (waitpid(pid, NULL, 0) == -1)
-    {
         ft_close_pipe(fd);
-        ft_error(BAD_UNDEFINED, STDOUT_FILENO);
+        ft_execute(STDOUT_FILENO, argv, envp);
     }
     else
     {
