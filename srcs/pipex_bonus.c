@@ -7,10 +7,14 @@
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:33:01 by tkeil             #+#    #+#             */
 <<<<<<< HEAD
+<<<<<<< HEAD
 /*   Updated: 2024/12/07 15:12:01 by tkeil            ###   ########.fr       */
 =======
 /*   Updated: 2024/12/07 14:45:59 by tkeil            ###   ########.fr       */
 >>>>>>> f7bbedc (mend)
+=======
+/*   Updated: 2024/12/07 15:12:01 by tkeil            ###   ########.fr       */
+>>>>>>> 2938c21 (mend)
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +33,7 @@ static void    ft_create_pipe(int *fd, int *read, char *argv, char **envp)
             ft_dup2(*read, STDIN_FILENO, fd);
         ft_dup2(fd[1], STDOUT_FILENO, fd);
 <<<<<<< HEAD
+<<<<<<< HEAD
         ft_close_pipe(fd);
         ft_execute(STDOUT_FILENO, argv, envp);
     }
@@ -42,12 +47,18 @@ static void    ft_create_pipe(int *fd, int *read, char *argv, char **envp)
     if (waitpid(pid, NULL, 0) == -1)
     {
 =======
+=======
+        ft_close_pipe(fd);
+>>>>>>> 2938c21 (mend)
         ft_execute(STDOUT_FILENO, argv, envp);
     }
-    if (*read != -1)
-        close(*read);
-    *read = fd[0];
-    ft_close_pipe(fd);
+    else
+    {
+        if (*read != -1)
+            close(*read);
+        *read = fd[0];
+        ft_close_pipe(fd);
+    }
     if (waitpid(pid, NULL, 0) == -1)
     {
 >>>>>>> f7bbedc (mend)
