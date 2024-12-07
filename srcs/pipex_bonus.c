@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:33:01 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/07 14:48:01 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/07 15:12:01 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,16 @@ static void    ft_create_pipe(int *fd, int *read, char *argv, char **envp)
         if (*read != -1)
             ft_dup2(*read, STDIN_FILENO, fd);
         ft_dup2(fd[1], STDOUT_FILENO, fd);
+        ft_close_pipe(fd);
         ft_execute(STDOUT_FILENO, argv, envp);
     }
-    if (*read != -1)
-        close(*read);
-    *read = fd[0];
-    ft_close_pipe(fd);
+    else
+    {
+        if (*read != -1)
+            close(*read);
+        *read = fd[0];
+        ft_close_pipe(fd);
+    }
     if (waitpid(pid, NULL, 0) == -1)
     {
         ft_close_pipe(fd);
@@ -43,7 +47,7 @@ int	main(int argc, char **argv, char **envp)
     int     read;
 	int		fd[2];
 
-	if (argc != 5 || !*argv[1])
+	if (argc < 5 || argc > 10 || !*argv[1])
 		return (1);
     ft_set_in(argv[1], fd);
     i = 1;
