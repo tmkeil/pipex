@@ -6,15 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 23:33:01 by tkeil             #+#    #+#             */
-<<<<<<< HEAD
-<<<<<<< HEAD
-/*   Updated: 2024/12/07 15:12:01 by tkeil            ###   ########.fr       */
-=======
-/*   Updated: 2024/12/07 14:45:59 by tkeil            ###   ########.fr       */
->>>>>>> f7bbedc (mend)
-=======
-/*   Updated: 2024/12/07 15:12:01 by tkeil            ###   ########.fr       */
->>>>>>> 2938c21 (mend)
+/*   Updated: 2024/12/07 21:50:40 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +24,16 @@ static void    ft_create_pipe(int *fd, int *read, char *argv, char **envp)
         if (*read != -1)
             ft_dup2(*read, STDIN_FILENO, fd);
         ft_dup2(fd[1], STDOUT_FILENO, fd);
-<<<<<<< HEAD
-<<<<<<< HEAD
-        ft_close_pipe(fd);
         ft_execute(STDOUT_FILENO, argv, envp);
+    }
+    if (*read != -1)
+        close(*read);
+    *read = fd[0];
+    ft_close_pipe(fd);
+    if (waitpid(pid, NULL, 0) == -1)
+    {
+        ft_close_pipe(fd);
+        ft_error(BAD_UNDEFINED, STDOUT_FILENO);
     }
     else
     {
@@ -46,22 +44,6 @@ static void    ft_create_pipe(int *fd, int *read, char *argv, char **envp)
     }
     if (waitpid(pid, NULL, 0) == -1)
     {
-=======
-=======
-        ft_close_pipe(fd);
->>>>>>> 2938c21 (mend)
-        ft_execute(STDOUT_FILENO, argv, envp);
-    }
-    else
-    {
-        if (*read != -1)
-            close(*read);
-        *read = fd[0];
-        ft_close_pipe(fd);
-    }
-    if (waitpid(pid, NULL, 0) == -1)
-    {
->>>>>>> f7bbedc (mend)
         ft_close_pipe(fd);
         ft_error(BAD_UNDEFINED, STDOUT_FILENO);
     }
@@ -82,11 +64,6 @@ int	main(int argc, char **argv, char **envp)
         ft_create_pipe(fd, &read, argv[i], envp);
     ft_set_out(argv[argc - 1], fd);
     ft_dup2(read, STDIN_FILENO, fd);
-<<<<<<< HEAD
-=======
-    close(read);
-    ft_close_pipe(fd);
->>>>>>> f7bbedc (mend)
     ft_execute(STDOUT_FILENO, argv[argc - 2], envp);
 	return (0);
 }
