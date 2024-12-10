@@ -13,16 +13,20 @@
 #ifndef PIPEX_H
 # define PIPEX_H
 
-# define BAD_FD 9
-# define BAD_PIPE 32
-# define BAD_UNDEFINED 0
-# define BAD_ALLOCATION 12
+# define BAD_PIPE 0
+# define BAD_FORK 1
+# define BAD_FD 2
+# define BAD_ALLOCATION 3
+# define BAD_EXECUTE 4
+# define BAD_DUP 5
+
 
 # include "libft.h"
 # include <sys/wait.h>
 # include <string.h>
 
-void	ft_error(int errno);
+void	ft_clr(char ***ptr);
+void	ft_error(int errnum, int fd);
 char    *ft_getpath(char *cmd, char **envp);
 
 #endif

@@ -12,9 +12,22 @@
 
 #include "pipex.h"
 
-void	ft_error(int errno)
+void	ft_error(int errnum, int fd)
 {
-	exit(errno);
+    if (errnum == BAD_PIPE)
+        ft_putendl_fd("couldn't pipe", fd);
+    else if (errnum == BAD_FORK)
+        ft_putendl_fd("couldn't fork", fd);
+    else if (errnum == BAD_FD)
+        ft_putendl_fd("couldn't open", fd);
+    else if (errnum == BAD_ALLOCATION)
+        ft_putendl_fd("couldn't allocate", fd);
+    else if (errnum == BAD_EXECUTE)
+        ft_putendl_fd("couldn't execute", fd);
+    else if (errnum == BAD_DUP)
+        ft_putendl_fd("couldn't duplicate", fd);
+    perror("Error");
+	exit(errnum);
 }
 
 void	ft_clr(char ***ptr)

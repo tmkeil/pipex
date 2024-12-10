@@ -12,67 +12,84 @@
 
 #include "pipex.h"
 
-void	ft_parent(char **argv, char **envp, int *fd)
+void	ft_execute(int std_out, char *argv, char **envp)
 {
-	int		in;
 	char	*path;
 	char	**cmds;
 
+	cmds = ft_split(argv, ' ');
+	if (!cmds)
+		ft_error(BAD_ALLOCATION, std_out);
+	path = ft_getpath(cmds[0], envp);
+	if (!path || execve(path, cmds, envp) == -1)
+	{
+		free(path);
+		ft_clr(cmds);
+		ft_error(BAD_EXECUTE, std_out);
+	}
+}
+
+void	ft_parent(char **argv, char **envp, int *fd)
+{
+	int		in;
+	int		tmp_out;
+
+	tmp_out = dup(STDOUT_FILENO);
 	in = open(argv[1], O_RDONLY);
 	if (in == -1)
-		ft_error(BAD_FD);
+		ft_error(BAD_FD, STDOUT_FILENO);
 	close(in);
 	if (dup2(in, STDIN_FILENO) < 0)
-        exit(0);
+        ft_error(BAD_DUP, STDOUT_FILENO);
 	if (dup2(fd[1], STDOUT_FILENO) < 0)
-        exit(0);
-	cmds = ft_split(argv[2], ' ');
-	if (!cmds)
-		exit(0);
-	path = ft_getpath(cmds[0], envp);
-	if (execve(path, cmds, envp) == -1)
-		exit(0);
+        ft_error(BAD_DUP, STDOUT_FILENO);
+	close(in);
+	close(fd[0]);
+	close(fd[1]);
+	ft_execute(tmp_out, argv[2], envp);
 }
 
 void	ft_child(char **argv, char **envp, int *fd)
 {
 	int		out;
-	char	*path;
-	char	**cmds;
+	int		tmp_out;
 
+	tmp_out = dup(STDOUT_FILENO);
 	out = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	if (out == -1)
-		ft_error(BAD_FD);
+		ft_error(BAD_FD, STDOUT_FILENO);
 	close(out);
 	if (dup2(fd[0], STDIN_FILENO) < 0)
-        exit(0);
+        ft_error(BAD_DUP, STDOUT_FILENO);
 	if (dup2(out, STDOUT_FILENO) < 0)
-        exit(0);
-	cmds = ft_split(argv[3], ' ');
-	if (!cmds)
-		exit(0);
-	path = ft_getpath(cmds[0], envp);
-	if (execve(path, cmds, envp) == -1)
-		exit(0);
+        ft_error(BAD_DUP, STDOUT_FILENO);
+	close(out);
+	close(fd[0]);
+	close(fd[1]);
+	ft_execute(tmp_out, argv[3], envp);
 }
 
 int	main(int argc, char **argv, char **envp)
 {
 	int		fd[2];
-	pid_t	id;
+	pid_t	pid1;
+	pid_t	pid2;
 
 	if (argc != 5 || !*argv[1])
 		return (1);
 	if (pipe(fd) == -1)
-		return (printf("couldn't pipe\n"), 1);
-	id = fork();
-	if (id == -1)
-		return (printf("couldn't fork\n"), 1);
-	if (id == 0)
+		ft_error(BAD_PIPE, STDOUT_FILENO);
+	pid1 = fork();
+	if (pid1 == -1)
+		ft_error(BAD_FORK, STDOUT_FILENO);
+	if (pid1 == 0)
 		ft_child(argv, envp, fd);
-	else
+	else if (pid2 == 0)
 		ft_parent(argv, envp, fd);
-	waitpid(id, NULL, 0);
+	close(fd[0]);
+	close(fd[1]);
+	waitpid(pid1, NULL, 0);
+	waitpid(pid2, NULL, 0);
 	return (0);
 }
 
