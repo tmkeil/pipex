@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 12:44:08 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/11 15:12:47 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/11 15:22:20 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	main(int argc, char **argv, char **envp)
 	if (pipe(fd) == -1)
 		ft_error(BAD_PIPE, STDOUT_FILENO);
 	pid1 = fork();
-	if (pid1 < -1)
+	if (pid1 == -1)
 		ft_error(BAD_FORK, STDOUT_FILENO);
 	if (pid1 == 0)
 		ft_child1(argv, envp, fd);
