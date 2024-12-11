@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 12:44:08 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/11 15:22:20 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/11 15:48:05 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,8 @@ int	main(int argc, char **argv, char **envp)
 		ft_child2(argv, envp, fd);
 	close(fd[0]);
 	close(fd[1]);
-	waitpid(pid1, NULL, 0);
-	waitpid(pid2, NULL, 0);
+	if (waitpid(pid1, NULL, 0) == -1 || waitpid(pid2, NULL, 0) == -1)
+		ft_error(BAD_WAITPID, STDOUT_FILENO);
 	return (0);
 }
 

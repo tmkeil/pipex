@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 12:44:14 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/11 15:17:13 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/11 15:50:26 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ void	ft_error(int errnum, int fd)
 		ft_putendl_fd("Error: couldn't execute", fd);
 	else if (errnum == BAD_DUP)
 		ft_putendl_fd("Error: couldn't duplicate", fd);
+	else if (errnum == BAD_WAITPID)
+		ft_putendl_fd("Error: waitpid error", fd);
 	exit(errnum);
 }
 
@@ -80,7 +82,6 @@ char	*ft_getpath(char *cmd, char **envp)
 			break ;
 		envp++;
 	}
-	printf("envp now at: %s\n", *envp);
 	env = ft_split(*envp + 5, ':');
 	if (!env || !*env)
 		return (NULL);
