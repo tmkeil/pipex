@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 12:44:08 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/07 19:13:44 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/11 15:12:47 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	ft_child1(char **argv, char **envp, int *fd)
 {
-	int		in;
-	int		tmp;
+	int	in;
+	int	tmp;
 
 	tmp = dup(STDOUT_FILENO);
 	in = open(argv[1], O_RDONLY);
@@ -23,10 +23,10 @@ void	ft_child1(char **argv, char **envp, int *fd)
 		ft_error(BAD_FD, tmp);
 	if (dup2(in, STDIN_FILENO) < 0 || dup2(fd[1], STDOUT_FILENO) < 0)
 	{
-        close(in);
+		close(in);
 		close(fd[0]);
 		close(fd[1]);
-        ft_error(BAD_FD, tmp);
+		ft_error(BAD_FD, tmp);
 	}
 	close(in);
 	close(fd[0]);
@@ -36,8 +36,8 @@ void	ft_child1(char **argv, char **envp, int *fd)
 
 void	ft_child2(char **argv, char **envp, int *fd)
 {
-	int		out;
-	int		tmp;
+	int	out;
+	int	tmp;
 
 	tmp = dup(STDOUT_FILENO);
 	out = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0777);
@@ -82,6 +82,14 @@ int	main(int argc, char **argv, char **envp)
 	waitpid(pid2, NULL, 0);
 	return (0);
 }
+
+// int main(int argc, char **argv, char **envp)
+// {
+// 	(void)argc;
+// 	(void)argv;
+// 	printf("%s\n", ft_getpath("grep", envp));
+// 	return (0);
+// }
 
 // example: dup, dup2, open, close
 // int  main(void)
