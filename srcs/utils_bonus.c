@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 15:49:25 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/11 15:49:42 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/11 19:52:25 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	ft_set_in(char *argv, int *fd)
 
 	in = open(argv, O_RDONLY);
 	if (in == -1)
-		ft_error(BAD_FD, STDOUT_FILENO);
+		ft_error(BAD_FD);
 	ft_dup2(in, STDIN_FILENO, fd);
 }
 
@@ -30,7 +30,7 @@ void	ft_set_out(char *argv, int *fd)
 	if (out == -1)
 	{
 		ft_close_pipe(fd);
-		ft_error(BAD_FD, STDOUT_FILENO);
+		ft_error(BAD_FD);
 	}
 	ft_dup2(out, STDOUT_FILENO, fd);
 }
@@ -49,21 +49,7 @@ void	ft_dup2(int s, int d, int *fd)
 	{
 		close(s);
 		ft_close_pipe(fd);
-		ft_error(BAD_DUP, STDOUT_FILENO);
+		ft_error(BAD_DUP);
 	}
 	close(s);
-	ft_close_pipe(fd);
-}
-
-pid_t	ft_fork(int *fd)
-{
-	pid_t	pid;
-
-	pid = fork();
-	if (pid == -1)
-	{
-		ft_close_pipe(fd);
-		ft_error(BAD_DUP, STDOUT_FILENO);
-	}
-	return (pid);
 }

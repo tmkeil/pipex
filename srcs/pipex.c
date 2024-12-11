@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 12:44:08 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/11 15:48:05 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/11 20:43:10 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,45 +15,49 @@
 void	ft_child1(char **argv, char **envp, int *fd)
 {
 	int	in;
-	int	tmp;
 
-	tmp = dup(STDOUT_FILENO);
 	in = open(argv[1], O_RDONLY);
 	if (in == -1)
-		ft_error(BAD_FD, tmp);
-	if (dup2(in, STDIN_FILENO) < 0 || dup2(fd[1], STDOUT_FILENO) < 0)
+	{
+		close(fd[0]);
+		close(fd[1]);
+		ft_error(BAD_FD);
+	}
+	if (dup2(in, STDIN_FILENO) == -1 || dup2(fd[1], STDOUT_FILENO) == -1)
 	{
 		close(in);
 		close(fd[0]);
 		close(fd[1]);
-		ft_error(BAD_FD, tmp);
+		ft_error(BAD_FD);
 	}
 	close(in);
 	close(fd[0]);
 	close(fd[1]);
-	ft_execute(tmp, argv[2], envp);
+	ft_execute(argv[2], envp);
 }
 
 void	ft_child2(char **argv, char **envp, int *fd)
 {
 	int	out;
-	int	tmp;
 
-	tmp = dup(STDOUT_FILENO);
 	out = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	if (out == -1)
-		ft_error(BAD_FD, tmp);
-	if (dup2(fd[0], STDIN_FILENO) < 0 || dup2(out, STDOUT_FILENO) < 0)
+	{
+		close(fd[0]);
+		close(fd[1]);
+		ft_error(BAD_FD);
+	}
+	if (dup2(fd[0], STDIN_FILENO) == -1 || dup2(out, STDOUT_FILENO) == -1)
 	{
 		close(out);
 		close(fd[0]);
 		close(fd[1]);
-		ft_error(BAD_FD, tmp);
+		ft_error(BAD_FD);
 	}
 	close(out);
 	close(fd[0]);
 	close(fd[1]);
-	ft_execute(tmp, argv[3], envp);
+	ft_execute(argv[3], envp);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -65,24 +69,33 @@ int	main(int argc, char **argv, char **envp)
 	if (argc != 5 || !*argv[1])
 		return (1);
 	if (pipe(fd) == -1)
-		ft_error(BAD_PIPE, STDOUT_FILENO);
+		ft_error(BAD_PIPE);
 	pid1 = fork();
 	if (pid1 == -1)
-		ft_error(BAD_FORK, STDOUT_FILENO);
+		ft_error(BAD_FORK);
 	if (pid1 == 0)
 		ft_child1(argv, envp, fd);
 	pid2 = fork();
 	if (pid2 == -1)
-		ft_error(BAD_FORK, STDOUT_FILENO);
+		ft_error(BAD_FORK);
 	if (pid2 == 0)
 		ft_child2(argv, envp, fd);
 	close(fd[0]);
 	close(fd[1]);
 	if (waitpid(pid1, NULL, 0) == -1 || waitpid(pid2, NULL, 0) == -1)
-		ft_error(BAD_WAITPID, STDOUT_FILENO);
+		ft_error(BAD_WAITPID);
 	return (0);
 }
 
+// in.txt
+// hello
+// example line 1
+// test
+// example line 2
+// example line 1
+// cmds
+// ./pipex in.txt "grep example" "sort" output.txt
+// ./pipex in.txt "grep example" "sort" "uniq" output.txt
 // int main(int argc, char **argv, char **envp)
 // {
 // 	(void)argc;
@@ -90,7 +103,6 @@ int	main(int argc, char **argv, char **envp)
 // 	printf("%s\n", ft_getpath("grep", envp));
 // 	return (0);
 // }
-
 // example: dup, dup2, open, close
 // int  main(void)
 // {
@@ -112,13 +124,11 @@ int	main(int argc, char **argv, char **envp)
 //  write(STDOUT_FILENO, " back again\n", 12);
 //  return (0);
 // }
-
 // example1 fork and waitpid
 // int  main(void)
 // {
 //  pid_t   id1;
 //  pid_t   id2;
-
 //  id1 = fork();
 //  id2 = fork();
 //  if (id1 == 0)
@@ -139,14 +149,12 @@ int	main(int argc, char **argv, char **envp)
 //      printf("waiting\n");
 //  return (0);
 // }
-
 // simpler pipe example
 // int  main(void)
 // {
 //  char    child_content[100];
 //  int     fd[2];
 //  pid_t   id;
-
 //  if (pipe(fd) == -1)
 //      return (printf("couldn't pipe\n"), 1);
 //  id = fork();
@@ -171,14 +179,12 @@ int	main(int argc, char **argv, char **envp)
 //      printf("waiting\n");
 //  return (0);
 // }
-
 // practice pipe
 // int  prep(char *in, int **ptr)
 // {
 //  int     i;
 //  long    val;
 //  char    **splitted;
-
 //  i = 0;
 //  splitted = ft_split(in, ' ');
 //  if (!splitted)
@@ -199,7 +205,6 @@ int	main(int argc, char **argv, char **envp)
 //  }
 //  return (1);
 // }
-
 // exercise communication processes through a pipe
 // int  main(int argc, char **argv)
 // {
@@ -210,7 +215,6 @@ int	main(int argc, char **argv, char **envp)
 //  int     *input;
 //  int     res;
 //  char    *r;
-
 //  input = NULL;
 //  if (argc != 2 || !*argv[1])
 //      return (0);
@@ -249,7 +253,6 @@ int	main(int argc, char **argv, char **envp)
 //      printf("waiting\n");
 //  return (0);
 // }
-
 // example what it should do
 // int  main(void)
 // {

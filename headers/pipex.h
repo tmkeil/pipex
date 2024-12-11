@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 12:43:55 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/11 16:28:28 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/11 19:52:09 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,11 @@
 # include <sys/wait.h>
 
 void	ft_clr(char ***ptr);
-void	ft_error(int errnum, int fd);
+void	ft_error(int errnum);
 char	*ft_getpath(char *cmd, char **envp);
-void	ft_execute(int std_out, char *argv, char **envp);
+void	ft_execute(char *argv, char **envp);
 
 // bonus
-pid_t	ft_fork(int *fd);
 void	ft_dup2(int s, int d, int *fd);
 void	ft_close_pipe(int *fd);
 void	ft_set_out(char *argv, int *fd);

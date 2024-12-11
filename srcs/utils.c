@@ -6,28 +6,28 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 12:44:14 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/11 15:50:26 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/11 22:33:50 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	ft_error(int errnum, int fd)
+void	ft_error(int errnum)
 {
 	if (errnum == BAD_PIPE)
-		ft_putendl_fd("Error: couldn't pipe", fd);
+		ft_putendl_fd("Error: couldn't pipe", STDERR_FILENO);
 	else if (errnum == BAD_FORK)
-		ft_putendl_fd("Error: couldn't fork", fd);
+		ft_putendl_fd("Error: couldn't fork", STDERR_FILENO);
 	else if (errnum == BAD_FD)
-		ft_putendl_fd("Error: couldn't open", fd);
+		ft_putendl_fd("Error: couldn't open", STDERR_FILENO);
 	else if (errnum == BAD_ALLOCATION)
-		ft_putendl_fd("Error: couldn't allocate", fd);
+		ft_putendl_fd("Error: couldn't allocate", STDERR_FILENO);
 	else if (errnum == BAD_EXECUTE)
-		ft_putendl_fd("Error: couldn't execute", fd);
+		ft_putendl_fd("Error: couldn't execute", STDERR_FILENO);
 	else if (errnum == BAD_DUP)
-		ft_putendl_fd("Error: couldn't duplicate", fd);
+		ft_putendl_fd("Error: couldn't duplicate", STDERR_FILENO);
 	else if (errnum == BAD_WAITPID)
-		ft_putendl_fd("Error: waitpid error", fd);
+		ft_putendl_fd("Error: waitpid error", STDERR_FILENO);
 	exit(errnum);
 }
 
@@ -55,10 +55,8 @@ static char	*ft_check_paths(char **env, char *cmd)
 	full = NULL;
 	while (env[i])
 	{
-		printf("env[%i] = %s\n", i, env[i]);
 		path = ft_strjoin(env[i], "/");
 		full = ft_strjoin(path, cmd);
-		printf("wird gecheckt: %s\n", full);
 		free(path);
 		if (!full)
 			return (ft_clr(&env), NULL);
@@ -88,19 +86,25 @@ char	*ft_getpath(char *cmd, char **envp)
 	return (ft_check_paths(env, cmd));
 }
 
-void	ft_execute(int std_out, char *argv, char **envp)
+void	ft_execute(char *argv, char **envp)
 {
 	char	*path;
 	char	**cmds;
 
 	cmds = ft_split(argv, ' ');
 	if (!cmds)
-		ft_error(BAD_ALLOCATION, std_out);
+		ft_error(BAD_ALLOCATION);
 	path = ft_getpath(cmds[0], envp);
 	if (!path || execve(path, cmds, envp) == -1)
 	{
-		free(path);
-		ft_clr(&cmds);
-		ft_error(BAD_EXECUTE, std_out);
+		if (path)
+			free(path);
+		if (cmds)
+			ft_clr(&cmds);
+		ft_error(BAD_EXECUTE);
 	}
+	if (path)
+		free(path);
+	if (cmds)
+		ft_clr(&cmds);
 }
