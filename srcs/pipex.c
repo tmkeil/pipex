@@ -12,7 +12,7 @@
 
 #include "pipex.h"
 
-void	ft_parent(char **argv, char **envp, int *fd)
+void	ft_child1(char **argv, char **envp, int *fd)
 {
 	int		in;
 	int		tmp;
