@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 15:24:19 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/11 16:02:41 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/11 16:28:36 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,13 @@ static void	ft_child(char **envp, char *argv, int *fd, int *read)
 	if (*read != -1)
 		close(*read);
 	else
-	{
-		if (*read != -1)
-			close(*read);
 		*read = fd[0];
+	ft_close_pipe(fd);
+	if (waitpid(pid, NULL, 0) == -1)
+	{
 		ft_close_pipe(fd);
+		ft_error(BAD_WAITPID, STDOUT_FILENO);
 	}
-	ft_waitpd(pid, NULL, 0, fd);
 }
 
 static void	ft_create_pipe(int *fd, int *read, char *argv, char **envp)

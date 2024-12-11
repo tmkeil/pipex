@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 12:43:55 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/11 15:52:45 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/11 16:28:28 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ char	*ft_getpath(char *cmd, char **envp);
 void	ft_execute(int std_out, char *argv, char **envp);
 
 // bonus
-void	ft_waitpd(pid_t pid, int *status, int option, int *fd);
 pid_t	ft_fork(int *fd);
 void	ft_dup2(int s, int d, int *fd);
 void	ft_close_pipe(int *fd);
