@@ -28,5 +28,6 @@
 void	ft_clr(char ***ptr);
 void	ft_error(int errnum, int fd);
 char    *ft_getpath(char *cmd, char **envp);
+void	ft_execute(int std_out, char *argv, char **envp);
 
 #endif

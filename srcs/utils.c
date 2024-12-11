@@ -83,3 +83,20 @@ char    *ft_getpath(char *cmd, char **envp)
         return (NULL);
 	return (ft_check_paths(env, cmd));
 }
+
+void	ft_execute(int std_out, char *argv, char **envp)
+{
+	char	*path;
+	char	**cmds;
+
+	cmds = ft_split(argv, ' ');
+	if (!cmds)
+		ft_error(BAD_ALLOCATION, std_out);
+	path = ft_getpath(cmds[0], envp);
+	if (!path || execve(path, cmds, envp) == -1)
+	{
+		free(path);
+		ft_clr(cmds);
+		ft_error(BAD_EXECUTE, std_out);
+	}
+}
